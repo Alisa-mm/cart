@@ -9,7 +9,7 @@ $(()=>{
      // 函数有两种写法 数组.forEach(function(e){}) 2.数组.forEach((e)=>{}) 只有一个参数，可以省略e的括号
         // 生成结构
       html += `<li class="goods-list-item">
-      <a href="detail.html?id=1">
+      <a href="detail.html?id=${e.pID}">
         <div class="item-img">
           <img src="${e.imgSrc}" alt="">
         </div>
