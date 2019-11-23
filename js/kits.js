@@ -10,6 +10,7 @@ kits.localData = function(key){
     } */
     // 简化为三元表达式
     arr = json===null?  [] : JSON.parse(json);
+    return arr;
 }
 // 封装把数据存储到本地数据的方法
 kits.saveData = function(key,data){
