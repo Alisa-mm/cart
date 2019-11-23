@@ -33,7 +33,7 @@ $(function(){
         // 在传数据之前要做一个判断
         // 判断是否已经存在该商品 - 根据id判断是否已经存在
         let exist = arr.find(function(e){
-           return e.PID == id ;
+           return e.pID == id ;
         });
         // 保证数量是数据  先转换一下
         number = parseInt(number);
@@ -46,13 +46,15 @@ $(function(){
                 imgSrc: target.imgSrc,
                 name: target.name,
                 price: target.price,
-                number: number
+                number: number,
+                // 保持勾选的状态的属性
+                isChecked:true
             }
             arr.push(obj);
         }
         // 数据存进数组里面  然后存进本地存储
         kits.saveData('cartlistdata',arr);
         // 然后跳转到购物车页面
-        location.herf = './cart.html';
+        location.href = './cart.html';
     })
 })
