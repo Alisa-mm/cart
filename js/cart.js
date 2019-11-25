@@ -107,6 +107,55 @@ $(function(){
     //一开始就要计算一次
     calcTotal();
     // 第四个功能 实现数量的加减
-    // 
+    // 给+号按钮注册点击事件,因为整个checkbox都是动态生成的  所以用委托
+    $('.item-list').on('click','.add',function(){
+        let prev = $(this).prev()
+         // 点击加号的时候 先获取它前一个兄弟元素 输入框
+        let current = prev.val();
+         // 让输入框里面的数字增加
+        prev.val(++current);
+        // 数量也要更新到本地数据里
+        let id = $(this).parents('.item').attr('data-id');
+        let obj = arr.find(e=>{
+          return e.pID == id;
+        });
+        obj.number = current;
+        // 把数据存到本地存储
+    kits.saveData('cartlistdata',arr);
+    // 更新总件数和总价格
+    calcTotal();
+    // 更新右边的总价
+    // console.log($(this).parents('.item').find('.computed')); // find这个方法用于查找某个元素的后代元素中，满足条件的部分
+        $(this).parents('.item').find('.computed').text(obj.number*obj.price);
+    })
+    // 给减号注册事件
+    $('.item-list').on('click','.reduce ',function(){
+      // 先获取减号的下一个兄弟元素 输入框
+      let next = $(this).next();
+      let current = next.val();
+      // 判断一下 当前的值是否小于等于1
+      if(current<=1){
+        alert('商品件数不能小于1');
+        return ;
+      }
+      next.val(--current);
+      // 数量也要更新到本地
+      let id = $(this).parents('.item').attr('data-id');
+      let obj = arr.find(e=>{
+        return e.pID == id;
+      });
+      obj.number = current;
+      // 存储到本地存储
+      kits.saveData('cartlistdata',arr);
+      // 更新总件数和总价
+      calcTotal();
+      // 更新右边的总价
+      $(this).parents('.item').find('.computed').text(obj.number*obj.price)
+    })
+    // 当得到焦点的时候，把当前的值先保存起来，如果失去焦点的时候输入的结果是不合理的，我们可以恢复原来的数字
+    $('.item-list').on('focus','.number',function(){
+      
+    })
+
 })
     
