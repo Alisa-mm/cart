@@ -116,17 +116,24 @@ $(function(){
         prev.val(++current);
         // 数量也要更新到本地数据里
         let id = $(this).parents('.item').attr('data-id');
-        let obj = arr.find(e=>{
+        let _this = $(this)
+        arr.forEach(e=>{
+          if(e.pID == id){
+            e.number = current;
+          }
+         $(this).parents('.item').find('.computed').text(e.number*e.price);
+        })
+      /*   let obj = arr.find(e=>{
           return e.pID == id;
-        });
-        obj.number = current;
+        }); */
+       /*  obj.number = current; */
         // 把数据存到本地存储
     kits.saveData('cartlistdata',arr);
     // 更新总件数和总价格
     calcTotal();
     // 更新右边的总价
     // console.log($(this).parents('.item').find('.computed')); // find这个方法用于查找某个元素的后代元素中，满足条件的部分
-        $(this).parents('.item').find('.computed').text(obj.number*obj.price);
+       /*  $(this).parents('.item').find('.computed').text(obj.number*obj.price); */
     })
     // 给减号注册事件
     $('.item-list').on('click','.reduce ',function(){
@@ -154,8 +161,45 @@ $(function(){
     })
     // 当得到焦点的时候，把当前的值先保存起来，如果失去焦点的时候输入的结果是不合理的，我们可以恢复原来的数字
     $('.item-list').on('focus','.number',function(){
-      
+     //  把旧的 正确的数量先存储起来
+      let old =$(this).val();
+      $(this).attr('data-old',old);
+    });
+    // 当输入框失去焦点时，需要把当前的值也同步到本地数据里面
+    $('.item-list').on('blur','.number',function(){
+       // 对用户的输入进行验证
+    let current = $(this).val();
+    if(current.trim().length === 0 ||isNaN(current) || parseInt(current<=0)){
+      let old = $(this).attr('data-old');
+      $(this).val(old);
+      alert('商品数量不正确，请输入一个阿拉伯数字');
+      return;
+    }
+    // 如果验证通过，把总价之类的数据更新
+    // 数量也要存储到本地
+    let id = $(this).parents('.item').attr('data-id');
+    let obj = arr.find(e=>{
+      return e.pID == id;
+    });
+    obj.number = parseInt(current);
+    kits.saveData('cartlistdata',arr);
+    calcTotal();
+    // 更新右边总价
+    $(this).parents('.item').find('.computed').text(obj.number * obj.price);
+    });
+    // 移除购物车商品
+    $('.item-list').on('click','.item-del',function(){
+        // 把对应的父元素item删除
+        $(this).parents('.item').remove();
+        calcTotal();
+        // 得到当前的id
+        let id = $(this).parents('.item').attr('data-id');
+        arr = arr.filter(e=>{
+          return e.pID != id;
+        })
+        // 存储到本地数据
+        kits.saveData('cartlistdata',arr);
     })
-
+   
 })
     
